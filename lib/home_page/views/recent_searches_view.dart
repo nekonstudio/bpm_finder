@@ -23,62 +23,53 @@ class RecentSearchesView extends StatelessWidget {
 
         return false;
       },
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          print(constraints.maxHeight);
-          return SizedBox(
-            height: constraints.maxHeight,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Recently searched',
-                    style: TextStyle(
-                      color: AppColors.darkGrey,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  if (recentlySearched.isEmpty)
-                    const Text('No recent history')
-                  else
-                    Expanded(
-                      child: Scrollbar(
-                        child: NotificationListener<
-                            OverscrollIndicatorNotification>(
-                          onNotification: (notification) {
-                            notification.disallowIndicator();
-                            return true;
-                          },
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: recentlySearched.map((item) {
-                                return ListTile(
-                                  title: Text(item),
-                                  onTap: () {
-                                    getIt
-                                        .get<HomePageCubit>()
-                                        .showSearchResultsPage(item);
-                                    getIt
-                                        .get<SearchBloc>()
-                                        .add(PerformSearch(input: item));
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        child: ListView(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          shrinkWrap: true,
+          children: [
+            const Text(
+              'Recently searched',
+              style: TextStyle(
+                color: AppColors.darkGrey,
+                fontWeight: FontWeight.w900,
+                fontSize: 24.0,
               ),
             ),
-          );
-        },
+            const SizedBox(height: 10.0),
+            if (recentlySearched.isEmpty)
+              const Text('No recent history')
+            else
+              Expanded(
+                child: Scrollbar(
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (notification) {
+                      notification.disallowIndicator();
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: recentlySearched.map((item) {
+                          return ListTile(
+                            title: Text(item),
+                            onTap: () {
+                              getIt
+                                  .get<HomePageCubit>()
+                                  .showSearchResultsPage(item);
+                              getIt
+                                  .get<SearchBloc>()
+                                  .add(PerformSearch(input: item));
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

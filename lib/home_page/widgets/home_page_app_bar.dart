@@ -1,5 +1,6 @@
 import 'package:bpm_finder/config/dependency_injection.dart';
 import 'package:bpm_finder/home_page/bloc/search_bloc/search_bloc.dart';
+import 'package:bpm_finder/home_page/pages/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -135,6 +136,9 @@ class _HomePageAppBarState extends State<HomePageAppBar> {
                     getIt.get<SearchBloc>().add(PerformSearch(input: value));
                   },
                   onTap: () {
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) => const HistoryScreen(),
+                    // ));
                     final state = getIt.get<HomePageCubit>().state;
                     if (state is! RecentSearchsPage) {
                       getIt.get<HomePageCubit>().showRecentSearchsPage();

@@ -10,6 +10,7 @@ import 'package:bpm_finder/home_page/views/favorites_view.dart';
 import 'package:bpm_finder/home_page/views/recent_searches_view.dart';
 import 'package:bpm_finder/home_page/views/search_results_view.dart';
 import 'package:bpm_finder/home_page/views/top_tracks_view.dart';
+import 'package:bpm_finder/home_page/widgets/home_app_bar_delegate.dart';
 import 'package:bpm_finder/home_page/widgets/home_page_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,6 +51,97 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowIndicator();
+
+          return true;
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: HomeAppBarDelegate(),
+            ),
+            // SliverAppBar(
+            //   pinned: true,
+            //   expandedHeight: 160.0,
+            //   title: Text(
+            //     'BPM Finder',
+            //     style: GoogleFonts.lato(
+            //       color: Colors.white,
+            //       fontSize: 44.0,
+            //       fontWeight: FontWeight.w900,
+            //     ),
+            //   ),
+            //   centerTitle: true,
+            //   flexibleSpace:
+            //       // FlexibleSpaceBar(
+            //       //   title:
+            //       Padding(
+            //     padding: const EdgeInsets.all(0.0),
+            //     child: TextField(
+            //       // controller: _textFieldController,
+            //       decoration: InputDecoration(
+            //         border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(30.0),
+            //           borderSide: const BorderSide(
+            //             width: 0,
+            //             style: BorderStyle.none,
+            //           ),
+            //         ),
+            //         filled: true,
+            //         fillColor: Colors.white,
+            //         hintText: 'Search songs, artists or tempo...',
+            //         hintStyle: const TextStyle(fontSize: 15.0),
+            //         suffixIcon: const Icon(Icons.search),
+            //         contentPadding: const EdgeInsets.symmetric(
+            //           horizontal: 26.0,
+            //         ),
+            //       ),
+            //       onSubmitted: (value) {
+            //         // getIt.get<HomePageCubit>().showSearchResultsPage(value);
+            //         // getIt.get<SearchBloc>().add(PerformSearch(input: value));
+            //       },
+            //       onTap: () {
+            //         // Navigator.of(context).push(MaterialPageRoute(
+            //         //   builder: (context) => const HistoryScreen(),
+            //         // ));
+            //         // final state = getIt.get<HomePageCubit>().state;
+            //         // if (state is! RecentSearchsPage) {
+            //         //   getIt.get<HomePageCubit>().showRecentSearchsPage();
+            //         // }
+            //       },
+            //     ),
+            //   ),
+            //   // centerTitle: true,
+            //   // ),
+            // ),
+            SliverList(
+                delegate: SliverChildBuilderDelegate(
+              (context, i) {
+                return BlocBuilder(
+                  bloc: getIt.get<HomePageCubit>(),
+                  builder: (context, state) {
+                    if (state is TopTracksPage) {
+                      return const TopTracksView();
+                    }
+                    if (state is RecentSearchsPage) {
+                      return const RecentSearchesView();
+                    }
+
+                    return const Text('Error!');
+                  },
+                );
+              },
+              childCount: 1,
+            )),
+          ],
+        ),
+      ),
+    );
+
     return BlocBuilder<HomePageCubit, HomePageState>(
       bloc: getIt.get<HomePageCubit>(),
       builder: (context, state) {
